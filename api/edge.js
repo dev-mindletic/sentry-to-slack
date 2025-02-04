@@ -62,19 +62,26 @@ const isError = level === "error";
     },
   ];
 try{
-  const response = await fetch('https://slack.com/api/chat.postMessage', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization': `Bearer ${process.env.SLACK_ACCESS_TOKEN}`,
-    },
-    body: JSON.stringify({
-      channel,
-      blocks,
-    }),
-  });
+ const response = await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': `Bearer ${process.env.SLACK_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        channel,
+        blocks,
+      }),
+    });
 
-  return response.data;
+    const responseData = await response.json();
+    console.log("Slack API Response:", responseData); // Log the actual response
+
+    if (!responseData.ok) {
+      console.error("Slack API Error:", responseData);
+    }
+
+    return responseData;
 }catch(e){
   console.error(e);
 }
